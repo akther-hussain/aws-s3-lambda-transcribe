@@ -42,8 +42,8 @@ The goal of this project is to automatically generate transcriptions for media f
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-repo/aws-s3-lambda-transcription-service.git
-cd aws-s3-lambda-transcription-service
+git clone https://github.com/akther-hussain/aws-s3-lambda-transcribe
+cd aws-s3-lambda-transcribe
 ```
 
 ### 2. Install Dependencies
@@ -53,34 +53,60 @@ Install the necessary dependencies by running the following command:
 Copy code
 npm install
 ```
-### 3. AWS Lambda Configuration
-Create a Lambda Function:
 
-Go to the AWS Management Console, navigate to Lambda, and create a new Lambda function using the Node.js runtime.
-Upload the Code:
+## 3. AWS Lambda Configuration
 
-Zip the TypeScript code and node modules, then upload the zip file to the Lambda function.
-Add Environment Variables (Optional):
+### Create a Lambda Function:
 
-Configure environment variables if needed (e.g., for file size limits).
-Set the Timeout and Memory:
+1. Go to the **AWS Management Console**.
+2. Navigate to **Lambda** and create a new Lambda function using the **Node.js runtime**.
+   
+### Upload the Code:
 
-Adjust timeout (e.g., to 15 minutes) and memory settings (512MB to 1GB recommended) based on your expected workload.
+1. Zip your **TypeScript code** and the `node_modules` folder.
+2. Upload the ZIP file to the newly created Lambda function.
 
-### 4. Set Up S3 Bucket and Events
-Create an S3 Bucket:
+### Add Environment Variables (Optional):
 
-In the AWS Management Console, create an S3 bucket where media files will be uploaded.
-Configure S3 Events:
+1. Optionally configure **environment variables** in the Lambda function.
+   - For example, you can set a **size limit** for files.
 
-Go to the S3 bucket properties and create a new event notification for ObjectCreated (All types).
-Select the Lambda function as the destination for the event.
-### 5. IAM Role Configuration
-Ensure your Lambda function's execution role has the following permissions:
+### Set Timeout and Memory:
 
-S3 Access: For reading and writing to the S3 bucket.
-Transcribe Permissions: To start transcription jobs and fetch job statuses.
-CloudWatch Logs: For logging into CloudWatch.
+1. Increase the **timeout** (e.g., to 15 minutes) based on the expected time needed for transcription jobs.
+2. Adjust **memory allocation** between **512MB to 1GB** depending on the expected load and file sizes.
+
+---
+
+## 4. Set Up S3 Bucket and Events
+
+### Create an S3 Bucket:
+
+1. In the **AWS Management Console**, create a new **S3 bucket** where media files will be uploaded.
+2. (Optional) Enable **S3 versioning** for safe recovery of files.
+
+### Configure S3 Events:
+
+1. Go to the **S3 bucket properties**.
+2. Under **Event Notifications**, create a new event notification for `ObjectCreated` (All types).
+3. Select the Lambda function created in the previous step as the **destination** for the event.
+4. Optionally, limit the event to certain file formats by specifying **prefixes or suffixes** like `.mp3`, `.wav`, etc.
+
+---
+
+## 5. IAM Role Configuration
+
+Ensure that the Lambda function’s **execution role** has the following permissions:
+
+### S3 Access:
+- The role must have permissions to **read and write** to the S3 bucket.
+
+### AWS Transcribe Permissions:
+- The role must be able to use AWS Transcribe services to start and monitor transcription jobs.
+
+### CloudWatch Logs:
+- Ensure the role has permissions to log data into **CloudWatch Logs** to track any issues or errors.
+
 Example IAM policy:
 
 ```bash
@@ -125,7 +151,7 @@ Check Transcriptions: The transcription results will be saved in the transcripti
 ### 7. Optional Scaling with AWS Step Functions
 For long-running transcription jobs, consider using AWS Step Functions to decouple the job submission from job status polling.
 
-Troubleshooting
+## Troubleshooting
 Permission Errors: Check that the Lambda's IAM role has sufficient permissions for S3 and AWS Transcribe.
 File Size Limits: Ensure that the uploaded file is within the size limits configured for Lambda and AWS Transcribe.
 Transcription Failures: Use CloudWatch Logs to investigate job failures and other issues.
