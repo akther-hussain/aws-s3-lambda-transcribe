@@ -50,7 +50,6 @@ cd aws-s3-lambda-transcribe
 Install the necessary dependencies by running the following command:
 
 ```bash
-Copy code
 npm install
 ```
 
